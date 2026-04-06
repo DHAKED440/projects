@@ -4,7 +4,7 @@ import threading
 
 # --- CONFIGURATION ---
 # Get your key from https://aistudio.google.com/
-API_KEY = "AIzaSyB5-u5nVI4WjSu-94stWxQ7dcK8Ibc1i7s"
+API_KEY = "YOUR_API_KEY"
 
 # Theme settings
 ctk.set_appearance_mode("dark")
