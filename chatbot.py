@@ -2,7 +2,7 @@ from google import genai
 import os
 
 # Set your API key in your environment or replace 'YOUR_API_KEY'
-client = genai.Client(api_key="AIzaSyB5-u5nVI4WjSu-94stWxQ7dcK8Ibc1i7s")
+client = genai.Client(api_key="YOUR_API_KEY")
 
 # Initialize chat session
 chat = client.chats.create(model="gemini-3-flash-preview")
