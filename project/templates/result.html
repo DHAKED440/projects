@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Quiz Result</title>
+
+<style>
+body {
+  margin: 0;
+  font-family: Arial;
+  background: radial-gradient(circle, #000428, #004e92);
+  color: white;
+  text-align: center;
+}
+
+/* Container */
+.container {
+  margin-top: 80px;
+}
+
+/* Card */
+.result-card {
+  background: #001f3f;
+  padding: 30px;
+  border-radius: 20px;
+  width: 50%;
+  margin: auto;
+  box-shadow: 0 0 30px #00f2ff;
+}
+
+/* Title */
+.title {
+  font-size: 40px;
+  margin-bottom: 20px;
+  color: gold;
+}
+
+/* Stats */
+.stat {
+  font-size: 22px;
+  margin: 10px 0;
+}
+
+/* Highlight */
+.correct { color: #00ff88; }
+.wrong { color: #ff4d4d; }
+.score { color: gold; }
+.time { color: #00c3ff; }
+
+/* Button */
+.play-btn {
+  margin-top: 25px;
+  padding: 12px 25px;
+  border: none;
+  border-radius: 25px;
+  background: gold;
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.play-btn:hover {
+  background: orange;
+  transform: scale(1.05);
+}
+
+/* Progress Bar */
+.progress {
+  width: 80%;
+  height: 20px;
+  background: #333;
+  border-radius: 10px;
+  margin: 20px auto;
+  overflow: hidden;
+}
+
+.progress-bar {
+  height: 100%;
+  background: linear-gradient(to right, #00ff88, #00c3ff);
+}
+/* Emoji feedback */
+.emoji {
+  font-size: 60px;
+  margin-bottom: 10px;
+}
+</style>
+
+</head>
+
+<body>
+
+<div class="container">
+
+  <div class="result-card">
+
+    <!-- Emoji based on performance -->
+    {% if score >= 8 %}
+      <div class="emoji">🏆</div>
+    {% elif score >= 5 %}
+      <div class="emoji">😊</div>
+    {% else %}
+      <div class="emoji">😅</div>
+    {% endif %}
+
+    <div class="title">Quiz Completed!</div>
+
+    <div class="stat score">💰 Score: {{ score }} / 10</div>
+    <div class="stat correct">✅ Correct: {{ correct }}</div>
+    <div class="stat wrong">❌ Wrong: {{ wrong }}</div>
+    <div class="stat time">⏱ Time Taken: {{ time_spent }} sec</div>
+
+    <!-- Progress bar -->
+    <div class="progress">
+      <div class="progress-bar" style="width: {{ progress|default(0)|int }}%;"></div>
+    </div>
+
+    <!-- Performance Message -->
+    {% if score >= 8 %}
+      <h3 style="color:gold;">Excellent Performance! 🔥</h3>
+    {% elif score >= 5 %}
+      <h3 style="color:#00c3ff;">Good Job 👍</h3>
+    {% else %}
+      <h3 style="color:#ff4d4d;">Keep Practicing 💪</h3>
+    {% endif %}
+
+    <a href="/start_quiz">
+      <button class="play-btn">🔁 Play Again</button>
+    </a>
+
+  </div>
+
+</div>
+
+</body>
+</html>

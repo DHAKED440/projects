@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>KBC Quiz</title>
+
+<style>
+body {
+  margin: 0;
+  font-family: Arial;
+  background: radial-gradient(circle, #000428, #004e92);
+  color: white;
+  text-align: center;
+}
+
+/* Main Container */
+.container {
+  margin-top: 40px;
+}
+
+
+
+/* Question Box */
+.question-box {
+  background: #001f3f;
+  padding: 20px;
+  border-radius: 15px;
+  width: 60%;
+  margin: auto;
+  box-shadow: 0 0 20px #00f2ff;
+}
+
+/* Options Grid */
+.options {
+  margin-top: 30px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 15px;
+  width: 60%;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* Option Buttons */
+.option {
+  padding: 15px;
+  border-radius: 30px;
+  border: none;
+  cursor: pointer;
+  font-size: 16px;
+  background: #012a4a;
+  color: white;
+  transition: 0.3s;
+  box-shadow: 0 0 10px #00c3ff;
+}
+
+.option:hover {
+  background: #0077b6;
+  transform: scale(1.05);
+}
+
+/* Correct / Wrong */
+.correct {
+  background: green !important;
+  color: white;
+}
+
+.wrong {
+  background: red !important;
+  color: white;
+}
+
+/* Next Button */
+.next-btn {
+  margin-top: 20px;
+  padding: 10px 20px;
+  border-radius: 20px;
+  border: none;
+  background: gold;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+/* Top Bar */
+.top-bar {
+  display: flex;
+  justify-content: space-between;
+  padding: 10px 30px;
+  font-size: 18px;
+}
+
+/* Lifelines */
+.lifelines span {
+  margin: 0 10px;
+  background: #ffcc00;
+  padding: 5px 10px;
+  border-radius: 10px;
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="top-bar">
+  <div>👤 {{ name }}</div>
+  <div class="lifelines">
+    <span 
+onclick="window.location.href='/lifeline_5050'"
+{% if lifeline_used %}style="opacity:0.5;pointer-events:none;"{% endif %}>
+50:50
+</span>
+    <span onclick="window.location.href='/audience_poll'"
+{% if audience_used %}style="opacity:0.5;pointer-events:none;"{% endif %}>
+📊
+</span>
+
+<span onclick="window.location.href='/phone_friend'"
+{% if phone_used %}style="opacity:0.5;pointer-events:none;"{% endif %}>
+📞
+</span>
+  </div>
+  <div>💰 Score: {{ session['score'] }}</div>
+</div>
+
+<div class="container">
+
+<div style="font-size:20px; margin-bottom:10px;">
+⏳ Time Left: <span id="timer">30</span> sec
+</div>
+
+  <!-- Question -->
+  <div class="question-box">
+    <h2>{{ question['question'] }}</h2>
+  </div>
+
+  <!-- Options -->
+  <form method="POST">
+    <div class="options">
+
+     {% for opt,label in [('option a','A'),('option b','B'),('option c','C'),('option d','D')] %}
+
+{% if lifeline_active and loop.index > 2 %}
+{% else %}
+
+<button name="option"
+        value="{{ question[opt] }}"
+        class="option
+        {% if result %}
+            {% if question[opt] == correct %}correct
+            {% elif question[opt] == selected %}wrong
+            {% endif %}
+        {% endif %}
+        "
+        {% if result %}disabled{% endif %}>
+    
+    <b>{{ label }}:</b> {{ question[opt] }}
+</button>
+
+{% endif %}
+
+{% endfor %}
+
+    </div>
+  </form>
+
+  <!-- ✅ Audience Poll -->
+{% if poll %}
+<div style="margin-top:20px;">
+  <h3>📊 Audience Poll</h3>
+  <p>A: {{ poll['A'] }}%</p>
+  <p>B: {{ poll['B'] }}%</p>
+  <p>C: {{ poll['C'] }}%</p>
+  <p>D: {{ poll['D'] }}%</p>
+</div>
+{% endif %}
+
+<!-- ✅ Phone a Friend -->
+{% if phone %}
+<div style="margin-top:20px;">
+  <h3>📞 Friend Suggests: {{ phone }}</h3>
+</div>
+{% endif %}
+
+  {% if result %}
+  <form action="/next">
+    <button class="next-btn">Next Question ➡</button>
+  </form>
+  {% endif %}
+
+</div>
+
+<audio id="correctSound" src="{{ url_for('static', filename='correct.mp3') }}"></audio>
+<audio id="wrongSound" src="{{ url_for('static', filename='wrong.mp3') }}"></audio>
+
+<script>
+  var result = "{{ result }}";
+
+  if (result == "correct") {
+    document.getElementById("correctSound").play();
+  } 
+  else if (result == "wrong") {
+    document.getElementById("wrongSound").play();
+  }
+</script>
+
+<script>
+let timeLeft = 30;
+
+let timer = setInterval(function(){
+    timeLeft--;
+    document.getElementById("timer").innerText = timeLeft;
+
+    if(timeLeft <= 0){
+        clearInterval(timer);
+        alert("⏰ Time's up!");
+        window.location.href = "/next";
+    }
+},1000);
+</script>
+
+</body>
+</html>
